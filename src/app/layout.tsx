@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { SessionBootstrap } from "@/components/auth/session-bootstrap";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -51,7 +52,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           enableSystem
           disableTransitionOnChange
         >
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            <SessionBootstrap/>
+            {children}
+            </QueryProvider>
           <Toaster richColors closeButton />
         </ThemeProvider>
       </body>
