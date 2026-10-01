@@ -3,10 +3,23 @@ import { Geist_Mono, Inter, Manrope } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
+import { QueryProvider } from "@/components/providers/query-provider";
 
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "swap" });
-const manrope = Manrope({ variable: "--font-manrope", subsets: ["latin"], display: "swap" });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+});
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin"],
+  display: "swap",
+});
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -32,8 +45,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${inter.variable} ${manrope.variable} ${geistMono.variable}`}
     >
       <body className="min-h-dvh bg-background font-sans text-foreground antialiased">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <QueryProvider>{children}</QueryProvider>
           <Toaster richColors closeButton />
         </ThemeProvider>
       </body>
