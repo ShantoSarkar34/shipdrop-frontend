@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { SessionBootstrap } from "@/components/auth/session-bootstrap";
+import { env } from "@/config/env";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -23,12 +24,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(env.siteUrl),
   title: {
     default: "SwiftDrop — Courier & logistics management",
     template: "%s | SwiftDrop",
   },
   description:
-    "Book parcel deliveries, track every step, and pay securely. SwiftDrop connects customers, delivery agents and operations in one platform.",
+    "Book parcel deliveries, follow every status change and pay securely. SwiftDrop connects customers, delivery agents and operations in one platform.",
+  openGraph: { type: "website", siteName: "SwiftDrop", locale: "en_US" },
+  twitter: { card: "summary_large_image" },
 };
 
 export const viewport: Viewport = {
@@ -53,9 +57,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           disableTransitionOnChange
         >
           <QueryProvider>
-            <SessionBootstrap/>
+            <SessionBootstrap />
             {children}
-            </QueryProvider>
+          </QueryProvider>
           <Toaster richColors closeButton />
         </ThemeProvider>
       </body>
