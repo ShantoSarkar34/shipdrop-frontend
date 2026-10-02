@@ -44,7 +44,11 @@
   --danger-fg: #991b1b;
 
   --gradient-brand: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  --gradient-hero: radial-gradient(60% 55% at 50% 0%, #dbe7ff 0%, rgba(219, 231, 255, 0) 70%);
+  --gradient-hero: radial-gradient(
+    60% 55% at 50% 0%,
+    #dbe7ff 0%,
+    rgba(219, 231, 255, 0) 70%
+  );
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --sidebar: oklch(0.985 0 0);
@@ -98,7 +102,11 @@
   --danger-fg: #fca5a5;
 
   --gradient-brand: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-  --gradient-hero: radial-gradient(60% 55% at 50% 0%, #17265a 0%, rgba(23, 38, 90, 0) 70%);
+  --gradient-hero: radial-gradient(
+    60% 55% at 50% 0%,
+    #17265a 0%,
+    rgba(23, 38, 90, 0) 70%
+  );
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
@@ -178,7 +186,10 @@
 }
 
 @layer base {
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }
@@ -190,5 +201,53 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+@theme {
+  --animate-sd-rise: sd-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-sd-fade: sd-fade 0.8s ease-out both;
+
+  @keyframes sd-rise {
+    from {
+      transform: translateY(14px);
+    }
+    to {
+      transform: none;
+    }
+  }
+  @keyframes sd-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+@keyframes sd-dash {
+  to {
+    stroke-dashoffset: -32;
+  }
+}
+
+.route-flow {
+  animation: sd-dash 2.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* SVG animations ignore the rules above, so hide them. */
+  .route-marker,
+  .route-pulse {
+    display: none;
   }
 }
