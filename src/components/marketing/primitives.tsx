@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { BackdropImage } from "@/components/marketing/backdrop-image";
+import { Reveal } from "@/components/marketing/reveal";
 
 export function Container({
   className,
@@ -37,7 +39,9 @@ export function Section({
         className,
       )}
     >
-      <Container>{children}</Container>
+      <Container>
+        <Reveal>{children}</Reveal>
+      </Container>
     </section>
   );
 }
@@ -98,15 +102,26 @@ export function PageHero({
   description: string;
 }) {
   return (
-    <section className="border-b border-border/60 bg-hero-glow">
-      <Container className="py-16 sm:py-20">
-        <p className="text-sm font-semibold tracking-wide text-primary uppercase">
+    <section className="relative isolate -mt-16 overflow-hidden bg-[#0b1020] pt-16 text-white">
+      <BackdropImage className="object-[50%_70%]" />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[linear-gradient(95deg,rgba(11,16,32,0.96)_0%,rgba(11,16,32,0.85)_55%,rgba(11,16,32,0.6)_100%)]"
+      />
+      <Container className="relative py-16 sm:py-24">
+        <p className="animate-sd-fade text-sm font-semibold tracking-wide text-blue-300 uppercase">
           {eyebrow}
         </p>
-        <h1 className="mt-3 max-w-3xl text-4xl font-extrabold sm:text-5xl">
+        <h1
+          className="mt-3 max-w-3xl animate-sd-rise text-4xl font-extrabold sm:text-5xl"
+          style={{ animationDelay: "80ms" }}
+        >
           {title}
         </h1>
-        <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
+        <p
+          className="mt-4 max-w-2xl animate-sd-rise text-lg text-white/75"
+          style={{ animationDelay: "160ms" }}
+        >
           {description}
         </p>
       </Container>

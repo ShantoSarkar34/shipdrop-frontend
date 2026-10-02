@@ -1,3 +1,4 @@
+import { MotionProvider } from "@/components/marketing/motion-provider";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { SiteHeader } from "@/components/marketing/site-header";
 
@@ -7,7 +8,12 @@ export default function MarketingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <MotionProvider>
+      <noscript>
+        <style>
+          {"[data-reveal]{opacity:1!important;transform:none!important}"}
+        </style>
+      </noscript>
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground"
@@ -17,6 +23,6 @@ export default function MarketingLayout({
       <SiteHeader />
       <main id="main">{children}</main>
       <SiteFooter />
-    </>
+    </MotionProvider>
   );
 }

@@ -8,17 +8,22 @@ import { Logo } from "@/components/brand/logo";
 import { Container } from "@/components/marketing/primitives";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { PUBLIC_NAV } from "@/config/site";
 import { ROLE_HOME } from "@/config/roles";
+import { PUBLIC_NAV } from "@/config/site";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 import { useSessionStore } from "@/stores/session-store";
 
+const ON_DARK_SOLID = "bg-white text-[#0b1020] hover:bg-white/90";
+const ON_DARK_GHOST = "text-white hover:bg-white/10 hover:text-white";
+
 function AuthActions({
   stacked,
+  overlay,
   onNavigate,
 }: {
   stacked?: boolean;
+  overlay?: boolean;
   onNavigate?: () => void;
 }) {
   const status = useSessionStore((state) => state.status);
@@ -41,7 +46,11 @@ function AuthActions({
       <Link
         href={ROLE_HOME[me.data.role]}
         onClick={onNavigate}
-        className={cn(buttonVariants({ size: "sm" }), full)}
+        className={cn(
+          buttonVariants({ size: "sm" }),
+          overlay && ON_DARK_SOLID,
+          full,
+        )}
       >
         Dashboard
       </Link>
@@ -58,6 +67,7 @@ function AuthActions({
             variant: stacked ? "outline" : "ghost",
             size: "sm",
           }),
+          overlay && ON_DARK_GHOST,
           full,
         )}
       >
@@ -66,7 +76,11 @@ function AuthActions({
       <Link
         href="/register"
         onClick={onNavigate}
-        className={cn(buttonVariants({ size: "sm" }), full)}
+        className={cn(
+          buttonVariants({ size: "sm" }),
+          overlay && ON_DARK_SOLID,
+          full,
+        )}
       >
         Get started
       </Link>
@@ -77,6 +91,20 @@ function AuthActions({
 export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Transparent over the banner, solid once the page scrolls or the mobile menu is open.
+  const overlay = !scrolled && !open;
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    const frame = requestAnimationFrame(onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -88,11 +116,22 @@ export function SiteHeader() {
   }, [open]);
 
   const close = () => setOpen(false);
-  const linkClass =
-    "rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none aria-[current=page]:bg-secondary aria-[current=page]:text-foreground";
+  const linkClass = cn(
+    "rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+    overlay
+      ? "text-white/80 hover:text-white aria-[current=page]:bg-white/10 aria-[current=page]:text-white"
+      : "text-muted-foreground hover:text-foreground aria-[current=page]:bg-secondary aria-[current=page]:text-foreground",
+  );
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur">
+    <header
+      className={cn(
+        "sticky top-0 z-40 border-b transition-colors duration-300",
+        overlay
+          ? "border-transparent bg-transparent text-white"
+          : "border-border/70 bg-background/85 text-foreground backdrop-blur",
+      )}
+    >
       <Container className="flex h-16 items-center justify-between gap-4">
         <Link
           href="/"
@@ -116,14 +155,14 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle />
+          <ThemeToggle className={overlay ? ON_DARK_GHOST : undefined} />
           <div className="hidden items-center gap-2 md:flex">
-            <AuthActions />
+            <AuthActions overlay={overlay} />
           </div>
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className={cn("md:hidden", overlay && ON_DARK_GHOST)}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             aria-controls="mobile-nav"
