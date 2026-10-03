@@ -94,7 +94,7 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
 
   // Transparent over the banner, solid once the page scrolls or the mobile menu is open.
-  const overlay = !scrolled && !open;
+  const overlay = pathname === "/" && !scrolled && !open;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
