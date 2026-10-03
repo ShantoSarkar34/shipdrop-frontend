@@ -11,24 +11,28 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
   return (
-    <div className="space-y-6">
-      <div className="space-y-1.5">
-        <h1 className="text-2xl font-extrabold">Create your account</h1>
-        <p className="text-sm text-muted-foreground">
-          Start sending or delivering with SwiftDrop.
+    <div className="space-y-7">
+      <div className="space-y-2">
+        <h1 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
+          Create your account
+        </h1>
+
+        <p className="text-sm leading-6 text-muted-foreground">
+          Start sending parcels or delivering with SwiftDrop.
         </p>
       </div>
 
       <RegisterForm />
 
-      <div className="flex items-center gap-3 text-xs text-muted-foreground uppercase">
+      <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
         <span className="h-px flex-1 bg-border" />
-        or
+        <span>or</span>
         <span className="h-px flex-1 bg-border" />
       </div>
 
       <GoogleButton />
-      <p className="text-center text-xs text-muted-foreground">
+
+      <p className="text-center text-xs leading-5 text-muted-foreground">
         Signing up with Google creates a customer account.
       </p>
 
@@ -36,7 +40,7 @@ export default function RegisterPage() {
         Already have an account?{" "}
         <Link
           href="/login"
-          className="font-medium text-primary underline-offset-4 hover:underline"
+          className="font-semibold text-primary underline-offset-4 hover:underline"
         >
           Sign in
         </Link>

@@ -12,30 +12,34 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="space-y-6">
-      <div className="space-y-1.5">
-        <h1 className="text-2xl font-extrabold">Welcome back</h1>
-        <p className="text-sm text-muted-foreground">
-          Sign in to your SwiftDrop account.
+    <div className="space-y-7">
+      <div className="space-y-2">
+        <h1 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
+          Welcome back
+        </h1>
+
+        <p className="text-sm leading-6 text-muted-foreground">
+          Log in to check your shipments, deliveries and payments.
         </p>
       </div>
 
       <LoginForm />
 
-      <div className="flex items-center gap-3 text-xs text-muted-foreground uppercase">
+      <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
         <span className="h-px flex-1 bg-border" />
-        or
+        <span>or</span>
         <span className="h-px flex-1 bg-border" />
       </div>
 
       <GoogleButton />
+
       <DemoLogin />
 
       <p className="text-center text-sm text-muted-foreground">
         New to SwiftDrop?{" "}
         <Link
           href="/register"
-          className="font-medium text-primary underline-offset-4 hover:underline"
+          className="font-semibold text-primary underline-offset-4 hover:underline"
         >
           Create an account
         </Link>
