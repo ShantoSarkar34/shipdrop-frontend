@@ -8,15 +8,17 @@ import { SessionBootstrap } from "@/components/auth/session-bootstrap";
 import { env } from "@/config/env";
 
 const inter = Inter({
-  variable: "--font-inter",
+  variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
 });
+
 const manrope = Manrope({
-  variable: "--font-manrope",
+  variable: "--font-display",
   subsets: ["latin"],
   display: "swap",
 });
+
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
@@ -37,8 +39,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fafaf9" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b1020" },
+    { media: "(prefers-color-scheme: light)", color: "#faf8f2" },
+    { media: "(prefers-color-scheme: dark)", color: "#17251d" },
   ],
 };
 
