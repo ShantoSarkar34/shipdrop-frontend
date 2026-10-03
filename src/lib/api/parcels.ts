@@ -59,3 +59,33 @@ export async function cancelParcel(id: string): Promise<void> {
     `/parcels/${encodeURIComponent(id)}/cancel`,
   );
 }
+
+export interface CreateParcelInput {
+  senderName: string;
+  senderPhone: string;
+  receiverName: string;
+  receiverPhone: string;
+  pickupAddress: string;
+  pickupCity: string;
+  deliveryAddress: string;
+  deliveryCity: string;
+  parcelType: string;
+  weightKg: number;
+  serviceType: string;
+  notes?: string;
+}
+
+export interface CreatedParcel {
+  id: string;
+  trackingId: string;
+  status: ParcelStatus;
+  deliveryCharge: number;
+  customerId: string;
+}
+
+// There is deliberately no price field: the backend calculates the delivery charge.
+export async function createParcel(
+  input: CreateParcelInput,
+): Promise<CreatedParcel> {
+  return (await api.post<CreatedParcel>("/parcels", input)).data;
+}

@@ -12,7 +12,7 @@ import {
   type ParcelListState,
 } from "@/hooks/use-parcel-list-params";
 import { getErrorMessage } from "@/lib/api/errors";
-import { cancelParcel, fetchParcel, fetchParcels } from "@/lib/api/parcels";
+import { cancelParcel, createParcel, fetchParcel, fetchParcels } from "@/lib/api/parcels";
 import { queryKeys } from "@/lib/query/keys";
 
 export function useParcelList(state: ParcelListState) {
@@ -50,5 +50,17 @@ export function useCancelParcel() {
     // (for example an agent just picked the parcel up).
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: queryKeys.parcels.all }),
+  });
+}
+
+export function useCreateParcel() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createParcel,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.parcels.all });
+      toast.success("Shipment created");
+    },
+    // Errors are handled by the wizard so they can be placed on the right field and step.
   });
 }
