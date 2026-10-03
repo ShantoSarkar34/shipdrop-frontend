@@ -1,12 +1,16 @@
-import type { ParcelStatus } from "@/lib/parcel-status";
+import type { HistoryEntry, ParcelStatus } from "@/lib/parcel-status";
 import { ApiError } from "./errors";
 import { api } from "./http";
 
-// Extended in the next step, once real list and detail responses are known.
+// Only fields confirmed by the API collection. Extended once real list and detail responses are known.
 export interface ParcelSummary {
   id: string;
   trackingId: string;
   status: ParcelStatus;
+}
+
+export interface ParcelDetail extends ParcelSummary {
+  statusHistory: HistoryEntry[];
 }
 
 export type ParcelSortBy = "createdAt" | "deliveryCharge";
@@ -37,4 +41,21 @@ export async function fetchParcelCount(status?: ParcelStatus): Promise<number> {
       message: "Unexpected response from the server.",
     });
   return response.meta.total;
+}
+
+export async function fetchParcel(
+  id: string,
+  signal?: AbortSignal,
+): Promise<ParcelDetail> {
+  return (
+    await api.get<ParcelDetail>(`/parcels/${encodeURIComponent(id)}`, {
+      signal,
+    })
+  ).data;
+}
+
+export async function cancelParcel(id: string): Promise<void> {
+  await api.patch<{ status: ParcelStatus }>(
+    `/parcels/${encodeURIComponent(id)}/cancel`,
+  );
 }

@@ -8,5 +8,9 @@ export const queryKeys = {
     count: (status?: ParcelStatus) =>
       ["parcels", "count", status ?? "all"] as const,
     list: (params: ParcelListParams) => ["parcels", "list", params] as const,
+    detail: (id: string) => ["parcels", "detail", id] as const,
+  },
+  payments: {
+    byParcel: (parcelId: string) => ["payments", "parcel", parcelId] as const,
   },
 };

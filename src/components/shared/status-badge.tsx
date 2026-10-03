@@ -24,7 +24,7 @@ const TONE_CLASS: Record<Tone, string> = {
   danger: "bg-danger-soft text-danger-fg",
 };
 
-const STATUS_META: Record<ParcelStatus, { icon: LucideIcon; tone: Tone }> = {
+export const STATUS_META: Record<ParcelStatus, { icon: LucideIcon; tone: Tone }> = {
   PENDING: { icon: Clock, tone: "warning" },
   CONFIRMED: { icon: CircleCheck, tone: "info" },
   ASSIGNED: { icon: ClipboardCheck, tone: "info" },
