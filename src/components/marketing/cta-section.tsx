@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { BackdropImage } from "@/components/marketing/backdrop-image";
+import { Container } from "@/components/marketing/primitives";
 import { Reveal } from "@/components/marketing/reveal";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -20,29 +22,59 @@ export function CtaSection({
   secondary?: CtaLink;
 }) {
   return (
-    <section className="py-16 sm:py-20">
-      <div className="container mx-auto px-4">
+    <section className="py-16 sm:py-24">
+      <Container>
         <Reveal>
-          <div className="rounded-2xl bg-primary px-6 py-12 text-primary-foreground sm:px-12 sm:py-14">
-            <div className="max-w-2xl">
-              <h2 className="text-3xl font-extrabold sm:text-4xl">{title}</h2>
-              <p className="mt-3 text-primary-foreground/80">{description}</p>
+          <div className="relative isolate overflow-hidden rounded-[1.75rem] px-6 py-12 text-white shadow-xl sm:px-10 sm:py-16 lg:px-14">
+            <BackdropImage className="object-cover object-center" />
+
+            {/* Background overlay */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-[#123d2b]/80"
+            />
+
+            {/* Subtle brand glow */}
+            <div
+              aria-hidden="true"
+              className="absolute -right-24 -top-24 size-72 rounded-full bg-(--harvest)/15 blur-3xl"
+            />
+
+            <div
+              aria-hidden="true"
+              className="absolute -bottom-32 -left-24 size-80 rounded-full bg-primary/20 blur-3xl"
+            />
+
+            {/* Content */}
+            <div className="relative z-10 max-w-2xl">
+              <h2 className="font-display text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
+                {title}
+              </h2>
+
+              <p className="mt-4 max-w-xl text-sm leading-6 text-white/75 sm:text-base">
+                {description}
+              </p>
+
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href={primary.href}
-                  className={buttonVariants({
-                    variant: "secondary",
-                    size: "lg",
-                  })}
+                  className={cn(
+                    buttonVariants({ size: "lg" }),
+                    "group bg-(--harvest) text-(--harvest-foreground) shadow-lg shadow-black/10 hover:bg-(--harvest)/90",
+                  )}
                 >
                   {primary.label}
                 </Link>
+
                 {secondary ? (
                   <Link
                     href={secondary.href}
                     className={cn(
-                      buttonVariants({ variant: "outline", size: "lg" }),
-                      "border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground dark:border-primary-foreground/40 dark:bg-transparent dark:hover:bg-primary-foreground/10",
+                      buttonVariants({
+                        variant: "outline",
+                        size: "lg",
+                      }),
+                      "border-white/25 bg-white/5 text-white hover:bg-white/10 hover:text-white",
                     )}
                   >
                     {secondary.label}
@@ -52,7 +84,7 @@ export function CtaSection({
             </div>
           </div>
         </Reveal>
-      </div>
+      </Container>
     </section>
   );
 }

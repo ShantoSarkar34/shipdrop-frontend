@@ -14,11 +14,11 @@ export function CtaBand({
   return (
     <section className="pb-16 sm:pb-24">
       <Container>
-        <div className="relative isolate overflow-hidden rounded-2xl bg-[#0b1020] px-6 py-12 text-white sm:px-12 sm:py-16">
-          <BackdropImage className="object-[50%_65%]" />
+        <div className="relative isolate overflow-hidden rounded-2xl px-6 py-12 text-white sm:px-12 sm:py-16">
+          <BackdropImage className="object-[50%_40%] " />
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-[linear-gradient(95deg,rgba(11,16,32,0.95)_0%,rgba(11,16,32,0.8)_55%,rgba(11,16,32,0.5)_100%)]"
+            className="absolute inset-0 bg-[#0b1020]/10"
           />
           <div className="relative max-w-xl space-y-4">
             <h2 className="text-3xl font-extrabold sm:text-4xl">{title}</h2>

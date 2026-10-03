@@ -1,74 +1,411 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1600 900"
+  preserveAspectRatio="xMidYMid slice"
+>
   <defs>
-    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#070b1a"/>
-      <stop offset=".55" stop-color="#13255f"/>
-      <stop offset="1" stop-color="#2b4fb3"/>
+    <!-- Main SwiftDrop background -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#123d2b"/>
+      <stop offset="0.5" stop-color="#174b35"/>
+      <stop offset="1" stop-color="#0d3022"/>
     </linearGradient>
-    <radialGradient id="glow" cx=".5" cy=".72" r=".6">
-      <stop offset="0" stop-color="#7cb4ff" stop-opacity=".55"/>
-      <stop offset="1" stop-color="#7cb4ff" stop-opacity="0"/>
+
+    <!-- Soft amber glow -->
+    <radialGradient id="amberGlow" cx="78%" cy="55%" r="55%">
+      <stop offset="0" stop-color="#e5aa3a" stop-opacity=".22"/>
+      <stop offset=".45" stop-color="#e5aa3a" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#e5aa3a" stop-opacity="0"/>
     </radialGradient>
-    <pattern id="windows" width="22" height="26" patternUnits="userSpaceOnUse">
-      <rect x="6" y="6" width="5" height="8" fill="#fcd34d" opacity=".55"/>
-      <rect x="14" y="14" width="4" height="6" fill="#93c5fd" opacity=".35"/>
+
+    <!-- Green glow -->
+    <radialGradient id="greenGlow" cx="20%" cy="20%" r="60%">
+      <stop offset="0" stop-color="#5da77c" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#5da77c" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Route gradient -->
+    <linearGradient id="route" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e5aa3a" stop-opacity="0"/>
+      <stop offset=".25" stop-color="#e5aa3a" stop-opacity=".7"/>
+      <stop offset=".65" stop-color="#f2c66c"/>
+      <stop offset="1" stop-color="#fff0bd" stop-opacity=".15"/>
+    </linearGradient>
+
+    <!-- Grid -->
+    <pattern
+      id="grid"
+      width="80"
+      height="80"
+      patternUnits="userSpaceOnUse"
+    >
+      <path
+        d="M80 0H0V80"
+        fill="none"
+        stroke="#ffffff"
+        stroke-width="1"
+        stroke-opacity=".045"
+      />
     </pattern>
-    <linearGradient id="road" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#0a1230"/>
-      <stop offset="1" stop-color="#050813"/>
-    </linearGradient>
-    <linearGradient id="trailA" x1="0" x2="1" y1="0" y2="0">
-      <stop offset="0" stop-color="#fbbf24" stop-opacity="0"/>
-      <stop offset=".5" stop-color="#fbbf24"/>
-      <stop offset="1" stop-color="#fde68a" stop-opacity="0"/>
-    </linearGradient>
-    <linearGradient id="trailB" x1="0" x2="1" y1="0" y2="0">
-      <stop offset="0" stop-color="#93c5fd" stop-opacity="0"/>
-      <stop offset=".5" stop-color="#bfdbfe"/>
-      <stop offset="1" stop-color="#93c5fd" stop-opacity="0"/>
-    </linearGradient>
-    <filter id="blur" x="-10%" y="-100%" width="120%" height="300%"><feGaussianBlur stdDeviation="4"/></filter>
-    <g id="mid">
-      <rect x="20" y="400" width="110" height="300"/><rect x="130" y="320" width="80" height="380"/>
-      <rect x="210" y="440" width="120" height="260"/><rect x="330" y="280" width="90" height="420"/>
-      <rect x="420" y="390" width="130" height="310"/><rect x="550" y="340" width="80" height="360"/>
-      <rect x="630" y="420" width="100" height="280"/><rect x="730" y="260" width="120" height="440"/>
-      <rect x="850" y="370" width="90" height="330"/><rect x="940" y="310" width="140" height="390"/>
-      <rect x="1080" y="400" width="100" height="300"/><rect x="1180" y="270" width="90" height="430"/>
-      <rect x="1270" y="380" width="130" height="320"/><rect x="1400" y="330" width="100" height="370"/>
-      <rect x="1500" y="410" width="100" height="290"/>
-    </g>
+
+    <!-- Soft blur -->
+    <filter id="blur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+
+    <filter id="smallBlur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+
+    <!-- Route glow -->
+    <filter id="routeGlow" x="-20%" y="-100%" width="140%" height="300%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
   </defs>
 
-  <rect width="1600" height="900" fill="url(#sky)"/>
-  <rect width="1600" height="900" fill="url(#glow)"/>
+  <!-- ========================================================= -->
+  <!-- BACKGROUND -->
+  <!-- ========================================================= -->
 
-  <g fill="#14214f" opacity=".9">
-    <rect x="0" y="500" width="80" height="200"/><rect x="80" y="440" width="60" height="260"/>
-    <rect x="140" y="520" width="90" height="180"/><rect x="230" y="400" width="70" height="300"/>
-    <rect x="300" y="480" width="100" height="220"/><rect x="400" y="360" width="60" height="340"/>
-    <rect x="460" y="450" width="90" height="250"/><rect x="550" y="510" width="80" height="190"/>
-    <rect x="630" y="390" width="110" height="310"/><rect x="740" y="470" width="70" height="230"/>
-    <rect x="810" y="340" width="90" height="360"/><rect x="900" y="430" width="60" height="270"/>
-    <rect x="960" y="500" width="100" height="200"/><rect x="1060" y="380" width="80" height="320"/>
-    <rect x="1140" y="460" width="70" height="240"/><rect x="1210" y="410" width="110" height="290"/>
-    <rect x="1320" y="490" width="60" height="210"/><rect x="1380" y="370" width="90" height="330"/>
-    <rect x="1470" y="450" width="130" height="250"/>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+
+  <rect width="1600" height="900" fill="url(#greenGlow)"/>
+  <rect width="1600" height="900" fill="url(#amberGlow)"/>
+
+  <!-- Very subtle map grid -->
+  <rect width="1600" height="900" fill="url(#grid)"/>
+
+  <!-- Large atmospheric circles -->
+  <circle
+    cx="1250"
+    cy="450"
+    r="300"
+    fill="#e5aa3a"
+    opacity=".035"
+  />
+
+  <circle
+    cx="1250"
+    cy="450"
+    r="210"
+    fill="none"
+    stroke="#e5aa3a"
+    stroke-width="1"
+    opacity=".08"
+  />
+
+  <circle
+    cx="1250"
+    cy="450"
+    r="150"
+    fill="none"
+    stroke="#e5aa3a"
+    stroke-width="1"
+    opacity=".06"
+  />
+
+  <!-- ========================================================= -->
+  <!-- ABSTRACT MAP LINES -->
+  <!-- ========================================================= -->
+
+  <g
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="2"
+    stroke-linecap="round"
+    opacity=".055"
+  >
+    <path d="M-100 230C180 160 260 290 480 235C680 185 790 110 1040 175"/>
+    <path d="M-80 690C170 620 330 730 560 670C760 615 870 690 1110 610"/>
+    <path d="M340 -50C300 180 410 260 350 470C300 650 390 760 350 950"/>
+    <path d="M890 -50C830 160 940 280 880 460C830 610 920 760 860 950"/>
   </g>
 
-  <use href="#mid" fill="#0d173b"/>
-  <use href="#mid" fill="url(#windows)" opacity=".65"/>
+  <!-- ========================================================= -->
+  <!-- MAIN DELIVERY ROUTE -->
+  <!-- ========================================================= -->
 
-  <rect y="700" width="1600" height="200" fill="url(#road)"/>
-  <path d="M -50 790 C 400 745 900 805 1700 735" stroke="url(#trailA)" stroke-width="10" fill="none" filter="url(#blur)"/>
-  <path d="M -50 790 C 400 745 900 805 1700 735" stroke="url(#trailA)" stroke-width="3" fill="none"/>
-  <path d="M -50 830 C 500 790 1000 850 1700 780" stroke="url(#trailB)" stroke-width="8" fill="none" filter="url(#blur)"/>
-  <path d="M -50 830 C 500 790 1000 850 1700 780" stroke="url(#trailB)" stroke-width="2" fill="none"/>
-  <circle cx="1180" cy="650" r="24" fill="#fbbf24" opacity=".22" filter="url(#blur)"/>
-  <circle cx="420" cy="670" r="18" fill="#93c5fd" opacity=".25" filter="url(#blur)"/>
+  <!-- Glow behind route -->
+  <path
+    d="M470 650
+       C590 610 620 490 735 470
+       C850 450 850 575 960 550
+       C1070 525 1075 390 1195 350
+       C1270 325 1330 350 1390 300"
+    fill="none"
+    stroke="#e5aa3a"
+    stroke-width="18"
+    opacity=".12"
+    filter="url(#routeGlow)"
+  />
 
-  <g fill="#050813">
-    <rect x="-10" y="560" width="170" height="340"/>
-    <rect x="1440" y="590" width="190" height="310"/>
+  <!-- Main route -->
+  <path
+    d="M470 650
+       C590 610 620 490 735 470
+       C850 450 850 575 960 550
+       C1070 525 1075 390 1195 350
+       C1270 325 1330 350 1390 300"
+    fill="none"
+    stroke="url(#route)"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-dasharray="2 16"
+  />
+
+  <!-- Secondary route -->
+  <path
+    d="M620 760
+       C710 690 740 630 820 625
+       C910 620 950 700 1030 675
+       C1110 650 1135 570 1220 550"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="2"
+    stroke-opacity=".12"
+    stroke-dasharray="3 14"
+    stroke-linecap="round"
+  />
+
+  <!-- ========================================================= -->
+  <!-- ROUTE POINTS -->
+  <!-- ========================================================= -->
+
+  <!-- Pickup -->
+  <circle
+    cx="470"
+    cy="650"
+    r="10"
+    fill="#e5aa3a"
+    opacity=".18"
+    filter="url(#smallBlur)"
+  />
+
+  <circle
+    cx="470"
+    cy="650"
+    r="6"
+    fill="#e5aa3a"
+  />
+
+  <!-- Mid point -->
+  <circle
+    cx="735"
+    cy="470"
+    r="5"
+    fill="#ffffff"
+    opacity=".55"
+  />
+
+  <!-- Mid point -->
+  <circle
+    cx="960"
+    cy="550"
+    r="5"
+    fill="#ffffff"
+    opacity=".45"
+  />
+
+  <!-- Destination -->
+  <circle
+    cx="1390"
+    cy="300"
+    r="24"
+    fill="#e5aa3a"
+    opacity=".08"
+  />
+
+  <circle
+    cx="1390"
+    cy="300"
+    r="12"
+    fill="#e5aa3a"
+    opacity=".18"
+  />
+
+  <circle
+    cx="1390"
+    cy="300"
+    r="6"
+    fill="#f3c96e"
+  />
+
+  <!-- ========================================================= -->
+  <!-- PACKAGE -->
+  <!-- ========================================================= -->
+
+  <g transform="translate(695 410)">
+    <!-- shadow -->
+    <ellipse
+      cx="42"
+      cy="88"
+      rx="42"
+      ry="10"
+      fill="#000000"
+      opacity=".16"
+    />
+
+    <!-- box -->
+    <path
+      d="M8 24L42 8L76 24V68L42 84L8 68V24Z"
+      fill="#f4d28b"
+      opacity=".95"
+    />
+
+    <!-- front -->
+    <path
+      d="M42 42L76 24V68L42 84V42Z"
+      fill="#d99a20"
+      opacity=".9"
+    />
+
+    <!-- left -->
+    <path
+      d="M8 24L42 42V84L8 68V24Z"
+      fill="#e5aa3a"
+    />
+
+    <!-- tape -->
+    <path
+      d="M35 12L48 18V78L35 72V12Z"
+      fill="#fff2c7"
+      opacity=".72"
+    />
+
+    <!-- package line -->
+    <path
+      d="M8 24L42 42L76 24"
+      fill="none"
+      stroke="#fff4d2"
+      stroke-width="2"
+      opacity=".75"
+    />
   </g>
+
+  <!-- ========================================================= -->
+  <!-- DELIVERY TRUCK -->
+  <!-- ========================================================= -->
+
+  <g transform="translate(1120 250)">
+    <!-- glow -->
+    <circle
+      cx="90"
+      cy="65"
+      r="95"
+      fill="#e5aa3a"
+      opacity=".07"
+      filter="url(#blur)"
+    />
+
+    <!-- truck body -->
+    <path
+      d="M15 30
+         Q15 20 25 20
+         H108
+         V72
+         H15
+         Z"
+      fill="#ffffff"
+      opacity=".92"
+    />
+
+    <!-- cabin -->
+    <path
+      d="M108 42
+         H133
+         L157 60
+         V72
+         H108
+         Z"
+      fill="#f1c76c"
+    />
+
+    <!-- window -->
+    <path
+      d="M116 47H130L145 59H116V47Z"
+      fill="#16432f"
+      opacity=".9"
+    />
+
+    <!-- cargo detail -->
+    <path
+      d="M30 32H92"
+      stroke="#174b35"
+      stroke-width="3"
+      opacity=".35"
+    />
+
+    <path
+      d="M30 43H75"
+      stroke="#174b35"
+      stroke-width="3"
+      opacity=".2"
+    />
+
+    <!-- wheels -->
+    <circle cx="48" cy="78" r="14" fill="#0a2117"/>
+    <circle cx="48" cy="78" r="6" fill="#d8d8d0"/>
+
+    <circle cx="130" cy="78" r="14" fill="#0a2117"/>
+    <circle cx="130" cy="78" r="6" fill="#d8d8d0"/>
+
+    <!-- baseline -->
+    <path
+      d="M5 72H157"
+      stroke="#ffffff"
+      stroke-width="3"
+      stroke-linecap="round"
+      opacity=".35"
+    />
+  </g>
+
+  <!-- ========================================================= -->
+  <!-- LOCATION PIN -->
+  <!-- ========================================================= -->
+
+  <g transform="translate(1350 240)">
+    <path
+      d="M40 80
+         C40 80 10 48 10 29
+         C10 12 23 0 40 0
+         C57 0 70 12 70 29
+         C70 48 40 80 40 80Z"
+      fill="#e5aa3a"
+      opacity=".9"
+    />
+
+    <circle
+      cx="40"
+      cy="29"
+      r="11"
+      fill="#174b35"
+    />
+  </g>
+
+  <!-- ========================================================= -->
+  <!-- SMALL SPEED LINES -->
+  <!-- ========================================================= -->
+
+  <g
+    stroke="#ffffff"
+    stroke-linecap="round"
+    opacity=".12"
+  >
+    <path d="M1010 300H1080" stroke-width="3"/>
+    <path d="M980 318H1050" stroke-width="2"/>
+    <path d="M1040 336H1088" stroke-width="2"/>
+  </g>
+
+  <!-- ========================================================= -->
+  <!-- DARK EDGE VIGNETTE -->
+  <!-- ========================================================= -->
+
+  <rect
+    width="1600"
+    height="900"
+    fill="none"
+    stroke="#071b12"
+    stroke-width="40"
+    opacity=".22"
+  />
 </svg>
