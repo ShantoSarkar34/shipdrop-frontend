@@ -1,14 +1,20 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ApiError, getErrorMessage } from "@/lib/api/errors";
 import {
   createCheckout,
   fetchPayment,
-  isStripeCheckoutUrl,
+  fetchPayments,
 } from "@/lib/api/payments";
 import { queryKeys } from "@/lib/query/keys";
+import { isStripeCheckoutUrl } from "@/lib/stripe-url";
 
 const POLL_MS = 2500;
 
@@ -49,10 +55,21 @@ export function useStartCheckout() {
     },
     onError: (error, parcelId) => {
       toast.error(getErrorMessage(error));
-      // For example "already paid": refresh what we show.
       void queryClient.invalidateQueries({
         queryKey: queryKeys.payments.byParcel(parcelId),
       });
     },
+  });
+}
+
+export const PAYMENT_PAGE_LIMIT = 10;
+
+export function usePaymentHistory(page: number) {
+  const params = { page, limit: PAYMENT_PAGE_LIMIT };
+  return useQuery({
+    queryKey: queryKeys.payments.list(params),
+    queryFn: ({ signal }) => fetchPayments(params, signal),
+    placeholderData: keepPreviousData,
+    staleTime: 15_000,
   });
 }
