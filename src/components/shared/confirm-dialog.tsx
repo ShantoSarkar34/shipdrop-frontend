@@ -1,7 +1,7 @@
 "use client";
 
 import { LoaderCircle } from "lucide-react";
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 
 export function ConfirmDialog({
@@ -12,6 +12,7 @@ export function ConfirmDialog({
   dismissLabel = "Go back",
   pending,
   destructive,
+  children,
   onConfirm,
   onDismiss,
 }: {
@@ -22,6 +23,7 @@ export function ConfirmDialog({
   dismissLabel?: string;
   pending?: boolean;
   destructive?: boolean;
+  children?: ReactNode;
   onConfirm: () => void;
   onDismiss: () => void;
 }) {
@@ -56,6 +58,7 @@ export function ConfirmDialog({
       <p id={descriptionId} className="mt-2 text-sm text-muted-foreground">
         {description}
       </p>
+      {children ? <div className="mt-4">{children}</div> : null}
       <div className="mt-6 flex justify-end gap-2">
         <Button variant="outline" onClick={onDismiss} disabled={pending}>
           {dismissLabel}

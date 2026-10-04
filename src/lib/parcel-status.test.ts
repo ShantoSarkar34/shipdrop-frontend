@@ -3,6 +3,7 @@ import {
   buildTimeline,
   canCustomerCancel,
   canTransition,
+  getAgentActions,
   isParcelStatus,
   isTerminal,
   nextStatuses,
@@ -195,5 +196,67 @@ describe("buildTimeline", () => {
     expect(steps[5].state).toBe("current");
     expect(steps[5].at).toBe("2026-09-01T00:07:00.000Z");
     expect(steps[6].state).toBe("upcoming");
+  });
+});
+
+describe("getAgentActions", () => {
+  const kinds = (status: ParcelStatus) =>
+    getAgentActions(status).map((action) =>
+      action.kind === "status" ? action.to : action.kind,
+    );
+
+  it("offers pickup, accept and decline for an assigned parcel", () => {
+    expect(kinds("ASSIGNED")).toEqual(["pickup", "accept", "reject"]);
+  });
+
+  it("offers nothing before assignment or after the parcel is finished", () => {
+    for (const status of [
+      "PENDING",
+      "CONFIRMED",
+      "DELIVERED",
+      "CANCELLED",
+      "RETURNED",
+    ] as const) {
+      expect(getAgentActions(status)).toEqual([]);
+    }
+  });
+
+  it("never offers delivered while the parcel is only in transit", () => {
+    expect(kinds("IN_TRANSIT")).toEqual([
+      "OUT_FOR_DELIVERY",
+      "FAILED_DELIVERY",
+    ]);
+    expect(kinds("PICKED_UP")).toEqual(["IN_TRANSIT", "FAILED_DELIVERY"]);
+  });
+
+  it("offers delivered or failed once the parcel is out for delivery", () => {
+    expect(kinds("OUT_FOR_DELIVERY")).toEqual(["DELIVERED", "FAILED_DELIVERY"]);
+  });
+
+  it("offers a retry or a return after a failed delivery", () => {
+    const actions = getAgentActions("FAILED_DELIVERY");
+    expect(actions).toEqual([
+      {
+        kind: "status",
+        to: "OUT_FOR_DELIVERY",
+        label: "Retry delivery",
+        tone: "primary",
+      },
+      {
+        kind: "status",
+        to: "RETURNED",
+        label: "Mark returned",
+        tone: "danger",
+      },
+    ]);
+  });
+
+  it("only offers status moves the state machine allows", () => {
+    for (const status of PARCEL_STATUSES) {
+      for (const action of getAgentActions(status)) {
+        if (action.kind === "status")
+          expect(canTransition(status, action.to)).toBe(true);
+      }
+    }
   });
 });

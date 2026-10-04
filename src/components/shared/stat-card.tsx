@@ -8,7 +8,7 @@ export function StatCard({
   loading,
 }: {
   label: string;
-  value?: number;
+  value?: number | string;
   icon: LucideIcon;
   loading?: boolean;
 }) {

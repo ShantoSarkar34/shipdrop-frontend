@@ -144,3 +144,45 @@ export function buildTimeline(
   );
   return steps;
 }
+
+export type AgentAction =
+  | { kind: "accept" }
+  | { kind: "reject" }
+  | { kind: "pickup" }
+  | {
+      kind: "status";
+      to: ParcelStatus;
+      label: string;
+      tone: "primary" | "danger";
+    };
+
+// Moves an agent makes through the status endpoint. Everything else (confirming, assigning, cancelling)
+// belongs to admins or customers.
+const AGENT_STATUS_LABEL: Partial<Record<ParcelStatus, string>> = {
+  IN_TRANSIT: "Mark in transit",
+  OUT_FOR_DELIVERY: "Out for delivery",
+  DELIVERED: "Mark delivered",
+  FAILED_DELIVERY: "Report failed delivery",
+  RETURNED: "Mark returned",
+};
+
+/** What an assigned delivery agent can do next, derived from the state machine. */
+export function getAgentActions(status: ParcelStatus): AgentAction[] {
+  if (status === "ASSIGNED")
+    return [{ kind: "pickup" }, { kind: "accept" }, { kind: "reject" }];
+
+  return nextStatuses(status)
+    .filter((to) => AGENT_STATUS_LABEL[to] !== undefined)
+    .map(
+      (to): AgentAction => ({
+        kind: "status",
+        to,
+        label:
+          status === "FAILED_DELIVERY" && to === "OUT_FOR_DELIVERY"
+            ? "Retry delivery"
+            : (AGENT_STATUS_LABEL[to] ?? ""),
+        tone:
+          to === "FAILED_DELIVERY" || to === "RETURNED" ? "danger" : "primary",
+      }),
+    );
+}
