@@ -186,3 +186,26 @@ export function getAgentActions(status: ParcelStatus): AgentAction[] {
       }),
     );
 }
+
+export interface AdminAction {
+  to: ParcelStatus;
+  label: string;
+  tone: "primary" | "danger";
+}
+
+export const canAssignAgent = (status: ParcelStatus): boolean =>
+  status === "PENDING" || status === "CONFIRMED";
+
+/** What an admin can do to a shipment besides assigning an agent, derived from the state machine. */
+export function getAdminActions(status: ParcelStatus): AdminAction[] {
+  if (!canAssignAgent(status)) return [];
+  return nextStatuses(status)
+    .filter((to) => to === "CONFIRMED" || to === "CANCELLED")
+    .map(
+      (to): AdminAction => ({
+        to,
+        label: to === "CONFIRMED" ? "Confirm shipment" : "Cancel shipment",
+        tone: to === "CANCELLED" ? "danger" : "primary",
+      }),
+    );
+}

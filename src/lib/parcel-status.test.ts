@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   buildTimeline,
+  canAssignAgent,
   canCustomerCancel,
   canTransition,
+  getAdminActions,
   getAgentActions,
   isParcelStatus,
   isTerminal,
@@ -258,5 +260,40 @@ describe("getAgentActions", () => {
           expect(canTransition(status, action.to)).toBe(true);
       }
     }
+  });
+});
+
+describe("admin actions", () => {
+  it("lets an admin confirm or cancel a pending shipment", () => {
+    expect(getAdminActions("PENDING").map((action) => action.to)).toEqual([
+      "CONFIRMED",
+      "CANCELLED",
+    ]);
+  });
+
+  it("only lets an admin cancel a confirmed shipment", () => {
+    expect(getAdminActions("CONFIRMED").map((action) => action.to)).toEqual([
+      "CANCELLED",
+    ]);
+  });
+
+  it("offers nothing once a shipment is assigned or finished", () => {
+    for (const status of [
+      "ASSIGNED",
+      "PICKED_UP",
+      "IN_TRANSIT",
+      "DELIVERED",
+      "CANCELLED",
+      "RETURNED",
+    ] as const) {
+      expect(getAdminActions(status)).toEqual([]);
+    }
+  });
+
+  it("allows assignment only while pending or confirmed", () => {
+    expect(canAssignAgent("PENDING")).toBe(true);
+    expect(canAssignAgent("CONFIRMED")).toBe(true);
+    expect(canAssignAgent("ASSIGNED")).toBe(false);
+    expect(canAssignAgent("DELIVERED")).toBe(false);
   });
 });

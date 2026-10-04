@@ -62,7 +62,13 @@ function ListSkeleton() {
   );
 }
 
-export function ShipmentsList() {
+export function ShipmentsList({
+  basePath = "/dashboard/shipments",
+  showCreate = true,
+}: {
+  basePath?: string;
+  showCreate?: boolean;
+}) {
   const { state, update } = useParcelListParams();
   const query = useParcelList(state);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -145,12 +151,21 @@ export function ShipmentsList() {
         <EmptyState
           icon={Package}
           title="No shipments yet"
-          description="Create your first shipment and it will appear here."
+          description={
+            showCreate
+              ? "Create your first shipment and it will appear here."
+              : "Shipments will appear here once customers create them."
+          }
           action={
-            <Link href="/dashboard/shipments/new" className={buttonVariants()}>
-              <PackagePlus aria-hidden="true" />
-              Create shipment
-            </Link>
+            showCreate ? (
+              <Link
+                href="/dashboard/shipments/new"
+                className={buttonVariants()}
+              >
+                <PackagePlus aria-hidden="true" />
+                Create shipment
+              </Link>
+            ) : undefined
           }
         />
       );
@@ -162,7 +177,7 @@ export function ShipmentsList() {
           {items.map((item) => (
             <li key={item.id}>
               <Link
-                href={`/dashboard/shipments/${item.id}`}
+                href={`${basePath}/${item.id}`}
                 className="flex items-center justify-between gap-4 rounded-xl border border-border bg-card px-4 py-4 transition-colors hover:border-primary/40 hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               >
                 <span className="min-w-0 truncate font-mono text-sm font-medium">

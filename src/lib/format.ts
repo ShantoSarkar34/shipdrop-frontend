@@ -2,6 +2,7 @@ const dateTime = new Intl.DateTimeFormat("en", {
   dateStyle: "medium",
   timeStyle: "short",
 });
+const date = new Intl.DateTimeFormat("en", { dateStyle: "medium" });
 
 export function formatDateTime(iso: string): string {
   const date = new Date(iso);
@@ -31,3 +32,8 @@ export function formatShortDate(isoDate: string): string {
 }
 
 export const formatPercent = (rate: number) => `${Math.round(rate * 100)}%`;
+
+export function formatDate(iso: string): string {
+  const parsed = new Date(iso);
+  return Number.isNaN(parsed.getTime()) ? "" : date.format(parsed);
+}
