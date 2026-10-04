@@ -111,13 +111,9 @@ export async function fetchAgentAnalytics(
 
 const MAX_LOOKUP_PAGES = 5;
 
-/**
- * There is no "get delivery by ID" endpoint, so find it in the agent's own deliveries,
- * narrowed by the parcel's current status to keep the search small.
- */
 export async function findDelivery(
   id: string,
-  status: ParcelStatus,
+  status: ParcelStatus | undefined,
   signal?: AbortSignal,
 ): Promise<Delivery | null> {
   for (let page = 1; page <= MAX_LOOKUP_PAGES; page += 1) {

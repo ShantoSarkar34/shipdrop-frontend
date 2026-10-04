@@ -35,11 +35,12 @@ export function useDeliveries(params: DeliveryListParams) {
 export function useDeliveryLookup(
   id: string,
   status: ParcelStatus | undefined,
+  enabled = true,
 ) {
   return useQuery({
-    queryKey: queryKeys.deliveries.lookup(id, status ?? ""),
-    queryFn: ({ signal }) => findDelivery(id, status as ParcelStatus, signal),
-    enabled: Boolean(status),
+    queryKey: queryKeys.deliveries.lookup(id, status ?? "any"),
+    queryFn: ({ signal }) => findDelivery(id, status, signal),
+    enabled,
     placeholderData: keepPreviousData,
     staleTime: 15_000,
   });
