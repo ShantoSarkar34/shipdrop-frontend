@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { SessionPreview } from "@/components/auth/session-preview";
+import { AdminDashboard } from "@/components/admin/admin-dashboard";
 
-export const metadata: Metadata = { title: "Dashboard" };
+export const metadata: Metadata = { title: "Admin dashboard" };
 
-export default function Page() {
-  return <SessionPreview />;
+export default function AdminDashboardPage() {
+  return <AdminDashboard />;
 }
