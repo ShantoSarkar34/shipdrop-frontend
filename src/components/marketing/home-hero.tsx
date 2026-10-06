@@ -14,7 +14,7 @@ const HIGHLIGHTS = [
 
 export function HomeHero() {
   return (
-    <section className="relative isolate -mt-16 overflow-hidden bg-(--cream)  text-foreground">
+    <section className="relative isolate -mt-5 md:-mt-16 overflow-hidden bg-(--cream)  text-foreground">
       {/* Soft decorative background */}
       <div
         aria-hidden="true"
