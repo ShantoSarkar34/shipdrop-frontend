@@ -3,9 +3,13 @@ import { api } from "./http";
 export type PaymentStatus = "PENDING" | "PAID" | "FAILED";
 
 export interface Payment {
-  status: PaymentStatus;
+  id: string;
+  parcelId: string;
   amount: number;
   currency: string;
+  status: PaymentStatus;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CheckoutSession {

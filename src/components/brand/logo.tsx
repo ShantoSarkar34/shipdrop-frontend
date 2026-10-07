@@ -47,7 +47,7 @@ export function LogoMark({ className }: { className?: string }) {
              V59
              H28
              Z"
-          className="fill-[#285C45] dark:fill-[#3C7359]"
+          className="fill-[#006f2b] dark:fill-[#3C7359]"
         />
 
         {/* Cargo top highlight */}
@@ -187,7 +187,7 @@ export function Logo({
       <LogoMark />
 
       {showWordmark ? (
-        <span className="font-display text-xl font-extrabold tracking-tight text-[#173D2E] dark:text-[#FFF9ED]">
+        <span className="font-display text-xl font-extrabold tracking-tight text-[#016327] dark:text-[#FFF9ED]">
           SwiftDrop
         </span>
       ) : (

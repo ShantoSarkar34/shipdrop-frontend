@@ -16,14 +16,21 @@ const POLL_WINDOW_MS = 60_000;
 export function PaymentSuccess() {
   const parcelId = useSearchParams().get("parcelId")?.trim() || undefined;
   const [timedOut, setTimedOut] = useState(false);
+  const [round, setRound] = useState(0);
 
-  // Stop automatic checking after a minute; the customer can still check manually.
+  // Poll for a minute, then stop. "Check again" starts a new round.
   useEffect(() => {
     const timer = window.setTimeout(() => setTimedOut(true), POLL_WINDOW_MS);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [round]);
 
   const payment = usePayment(parcelId, { poll: !timedOut });
+
+  const checkAgain = () => {
+    setTimedOut(false);
+    setRound((value) => value + 1);
+    void payment.refetch();
+  };
 
   if (!parcelId) {
     return (
@@ -80,9 +87,7 @@ export function PaymentSuccess() {
         }
         actions={
           <>
-            {notFound ? null : (
-              <Button onClick={() => payment.refetch()}>Try again</Button>
-            )}
+            {notFound ? null : <Button onClick={checkAgain}>Try again</Button>}
             {viewShipment}
           </>
         }
@@ -96,7 +101,8 @@ export function PaymentSuccess() {
     );
   }
 
-  const { status, amount, currency } = payment.data;
+  const { status, amount, currency, id } = payment.data;
+  const reference = id.slice(0, 8);
 
   if (status === "PAID") {
     return (
@@ -150,7 +156,7 @@ export function PaymentSuccess() {
     );
   }
 
-  // Still pending: coming back from Stripe is not proof of payment, so we wait for the backend.
+  // Still pending: returning from Stripe is not proof of payment, so we wait for the backend.
   if (timedOut) {
     return (
       <ResultCard
@@ -159,10 +165,7 @@ export function PaymentSuccess() {
         title="Still waiting for confirmation"
         actions={
           <>
-            <Button
-              onClick={() => payment.refetch()}
-              disabled={payment.isFetching}
-            >
+            <Button onClick={checkAgain} disabled={payment.isFetching}>
               Check again
             </Button>
             {viewShipment}
@@ -170,9 +173,12 @@ export function PaymentSuccess() {
         }
       >
         <p>
-          This is taking longer than usual. If you completed the payment, your
-          shipment will show as paid once Stripe&apos;s confirmation reaches us.
-          You can check again or come back later.
+          We haven&apos;t received Stripe&apos;s confirmation yet. If you
+          completed the payment, your shipment will show as paid as soon as it
+          arrives. You can check again or come back later.
+        </p>
+        <p className="mt-3 text-xs">
+          Payment reference: <span className="font-mono">{reference}</span>
         </p>
       </ResultCard>
     );
