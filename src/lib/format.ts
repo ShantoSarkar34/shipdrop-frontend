@@ -3,6 +3,12 @@ const dateTime = new Intl.DateTimeFormat("en", {
   timeStyle: "short",
 });
 const date = new Intl.DateTimeFormat("en", { dateStyle: "medium" });
+const compact = new Intl.NumberFormat("en", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+
+export const formatCompact = (value: number): string => compact.format(value);
 
 export function formatDateTime(iso: string): string {
   const date = new Date(iso);

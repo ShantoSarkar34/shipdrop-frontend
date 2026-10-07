@@ -13,6 +13,7 @@ import { useLogout } from "@/hooks/use-auth";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 import type { User } from "@/types/user";
+import { MotionProvider } from "@/components/marketing/motion-provider";
 
 /** The most specific nav item wins, so /dashboard/shipments/new highlights "Create Shipment", not "Shipments". */
 function findActiveHref(nav: readonly NavItem[], pathname: string) {
@@ -166,68 +167,70 @@ export function AppShell({
   };
 
   return (
-    <div className="min-h-dvh bg-background">
-      <a
-        href="#app-main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground"
-      >
-        Skip to content
-      </a>
-
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-border bg-card lg:block">
-        <SidebarContent {...sidebar} />
-      </aside>
-
-      {/* A native modal dialog gives the mobile drawer its focus trap, Escape key and focus return. */}
-      <dialog
-        ref={dialogRef}
-        aria-label="Navigation menu"
-        onClick={(event) => {
-          if (event.target === event.currentTarget) closeMenu();
-        }}
-        className="m-0 h-dvh max-h-none w-72 max-w-[85vw] border-r border-border bg-card p-0 text-foreground backdrop:bg-black/50 lg:hidden"
-      >
-        <SidebarContent
-          {...sidebar}
-          onNavigate={closeMenu}
-          onClose={closeMenu}
-        />
-      </dialog>
-
-      <div className="lg:pl-64">
-        <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-border bg-background/85 px-4 backdrop-blur lg:px-8">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            aria-label="Open menu"
-            onClick={() => dialogRef.current?.showModal()}
-          >
-            <Menu className="size-5" aria-hidden="true" />
-          </Button>
-          <p className="text-sm font-medium text-muted-foreground lg:hidden">
-            {AREA_LABEL[area]}
-          </p>
-          <div className="ml-auto flex items-center gap-1">
-            <ThemeToggle />
-            {user ? (
-              <Link
-                href={`${ROLE_HOME[user.role]}/profile`}
-                aria-label="Your profile"
-                className="flex size-9 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-              >
-                {initials(user.name)}
-              </Link>
-            ) : null}
-          </div>
-        </header>
-        <main
-          id="app-main"
-          className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8"
+    <MotionProvider>
+      <div className="min-h-dvh bg-background">
+        <a
+          href="#app-main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground"
         >
-          {children}
-        </main>
+          Skip to content
+        </a>
+
+        <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-border bg-card lg:block">
+          <SidebarContent {...sidebar} />
+        </aside>
+
+        {/* A native modal dialog gives the mobile drawer its focus trap, Escape key and focus return. */}
+        <dialog
+          ref={dialogRef}
+          aria-label="Navigation menu"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) closeMenu();
+          }}
+          className="m-0 h-dvh max-h-none w-72 max-w-[85vw] border-r border-border bg-card p-0 text-foreground backdrop:bg-black/50 lg:hidden"
+        >
+          <SidebarContent
+            {...sidebar}
+            onNavigate={closeMenu}
+            onClose={closeMenu}
+          />
+        </dialog>
+
+        <div className="lg:pl-64">
+          <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-border bg-background/85 px-4 backdrop-blur lg:px-8">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden"
+              aria-label="Open menu"
+              onClick={() => dialogRef.current?.showModal()}
+            >
+              <Menu className="size-5" aria-hidden="true" />
+            </Button>
+            <p className="text-sm font-medium text-muted-foreground lg:hidden">
+              {AREA_LABEL[area]}
+            </p>
+            <div className="ml-auto flex items-center gap-1">
+              <ThemeToggle />
+              {user ? (
+                <Link
+                  href={`${ROLE_HOME[user.role]}/profile`}
+                  aria-label="Your profile"
+                  className="flex size-9 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                >
+                  {initials(user.name)}
+                </Link>
+              ) : null}
+            </div>
+          </header>
+          <main
+            id="app-main"
+            className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8"
+          >
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </MotionProvider>
   );
 }
