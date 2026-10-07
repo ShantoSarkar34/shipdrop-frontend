@@ -30,7 +30,11 @@ export const NAV_BY_AREA: Record<Area, readonly NavItem[]> = {
   customer: [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/dashboard/shipments", label: "Shipments", icon: Package },
-    { href: "/dashboard/shipments/new", label: "Create Shipment", icon: PackagePlus },
+    {
+      href: "/dashboard/shipments/new",
+      label: "Create Shipment",
+      icon: PackagePlus,
+    },
     { href: "/dashboard/payments", label: "Payments", icon: CreditCard },
     { href: "/dashboard/profile", label: "Profile", icon: UserRound },
   ],
@@ -48,5 +52,6 @@ export const NAV_BY_AREA: Record<Area, readonly NavItem[]> = {
     { href: "/admin/analytics", label: "Analytics", icon: Activity },
     { href: "/admin/audit-logs", label: "Audit Logs", icon: ScrollText },
     { href: "/admin/profile", label: "Profile", icon: UserRound },
+    { href: "/admin/agents", label: "Agents", icon: Truck },
   ],
 };
