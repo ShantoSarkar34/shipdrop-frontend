@@ -12,7 +12,12 @@ import {
   type ParcelListState,
 } from "@/hooks/use-parcel-list-params";
 import { getErrorMessage } from "@/lib/api/errors";
-import { cancelParcel, createParcel, fetchParcel, fetchParcels } from "@/lib/api/parcels";
+import {
+  cancelParcel,
+  createParcel,
+  fetchParcel,
+  fetchParcels,
+} from "@/lib/api/parcels";
 import { queryKeys } from "@/lib/query/keys";
 
 export function useParcelList(state: ParcelListState) {
@@ -62,5 +67,19 @@ export function useCreateParcel() {
       toast.success("Shipment created");
     },
     // Errors are handled by the wizard so they can be placed on the right field and step.
+  });
+}
+
+export function useRecentParcels(limit = 5) {
+  const params = {
+    page: 1,
+    limit,
+    sortBy: "createdAt" as const,
+    sortOrder: "desc" as const,
+  };
+  return useQuery({
+    queryKey: queryKeys.parcels.list(params),
+    queryFn: ({ signal }) => fetchParcels(params, signal),
+    staleTime: 15_000,
   });
 }

@@ -9,25 +9,31 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { ChartCard } from "@/components/charts/chart-card";
-import { LazyBarChart } from "@/components/charts/lazy-bar-chart";
+import {
+  LazyAreaChart,
+  LazyDonutChart,
+  LazyRadarChart,
+} from "@/components/charts/lazy-charts";
+import { ProgressRing } from "@/components/charts/progress-ring";
 import { FormError } from "@/components/forms/form-error";
-import { NativeSelect } from "@/components/forms/native-select";
+import { RevealGroup } from "@/components/marketing/reveal";
 import { EmptyState } from "@/components/shared/empty-state";
+import { PeriodControl, periodLabel } from "@/components/shared/period-control";
 import { StatCard } from "@/components/shared/stat-card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DEFAULT_PERIOD, PERIODS } from "@/config/periods";
+import { DEFAULT_PERIOD } from "@/config/periods";
 import { useAgentAnalytics } from "@/hooks/use-deliveries";
 import { getErrorMessage } from "@/lib/api/errors";
+import { completionRate } from "@/lib/chart-data";
 import { formatShortDate } from "@/lib/format";
 import { STATUS_LABEL } from "@/lib/parcel-status";
 
 export function AnalyticsView() {
   const [period, setPeriod] = useState(DEFAULT_PERIOD);
   const analytics = useAgentAnalytics(period);
-  const periodLabel =
-    PERIODS.find((item) => item.value === period)?.label ?? period;
   const data = analytics.data;
+  const label = periodLabel(period).toLowerCase();
 
   const byStatus = (data?.deliveriesByStatus ?? []).map((entry) => ({
     label: STATUS_LABEL[entry.status] ?? entry.status,
@@ -37,28 +43,13 @@ export function AnalyticsView() {
     label: formatShortDate(point.date),
     value: point.count,
   }));
+  const finished = data
+    ? data.totalCompleted + data.totalFailed + data.totalReturned
+    : 0;
 
   return (
     <>
-      {PERIODS.length > 1 ? (
-        <div className="mb-6 max-w-xs">
-          <NativeSelect
-            label="Period"
-            value={period}
-            onChange={(event) => setPeriod(event.target.value)}
-          >
-            {PERIODS.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </NativeSelect>
-        </div>
-      ) : (
-        <p className="mb-6 text-sm text-muted-foreground">
-          Showing: {periodLabel}
-        </p>
-      )}
+      <PeriodControl value={period} onChange={setPeriod} />
 
       {analytics.isError ? (
         <div className="mb-6 space-y-3">
@@ -73,8 +64,8 @@ export function AnalyticsView() {
         </div>
       ) : null}
 
-      <section
-        aria-label="Delivery summary"
+      <RevealGroup
+        stagger={0.08}
         className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
       >
         <StatCard
@@ -101,7 +92,7 @@ export function AnalyticsView() {
           value={data?.totalReturned}
           loading={analytics.isPending}
         />
-      </section>
+      </RevealGroup>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         {analytics.isPending ? (
@@ -122,24 +113,63 @@ export function AnalyticsView() {
         ) : (
           <>
             {byStatus.length > 0 ? (
-              <ChartCard title="Deliveries by status" description={periodLabel}>
-                <LazyBarChart
-                  data={byStatus}
-                  orientation="rows"
-                  valueLabel="Deliveries"
-                  summary={`Bar chart of deliveries by status, ${periodLabel.toLowerCase()}`}
-                />
-              </ChartCard>
+              <>
+                <ChartCard
+                  title="Deliveries by status"
+                  description={periodLabel(period)}
+                >
+                  <LazyDonutChart
+                    data={byStatus}
+                    centerLabel="deliveries"
+                    summary={`Donut chart of deliveries by status, ${label}`}
+                  />
+                </ChartCard>
+                <ChartCard
+                  title="Delivery profile"
+                  description="The shape of your work across statuses."
+                >
+                  <LazyRadarChart
+                    data={byStatus}
+                    valueLabel="Deliveries"
+                    summary={`Radar chart of deliveries by status, ${label}`}
+                  />
+                </ChartCard>
+              </>
             ) : null}
             {trend.length > 0 ? (
-              <ChartCard title="Deliveries over time" description={periodLabel}>
-                <LazyBarChart
+              <ChartCard
+                title="Deliveries over time"
+                description={periodLabel(period)}
+              >
+                <LazyAreaChart
                   data={trend}
                   valueLabel="Deliveries"
-                  summary={`Bar chart of deliveries per day, ${periodLabel.toLowerCase()}`}
+                  summary={`Area chart of deliveries per day, ${label}`}
+                  colorIndex={1}
                 />
               </ChartCard>
             ) : null}
+            <ChartCard
+              title="Completion rate"
+              description="Completed deliveries out of all finished ones."
+            >
+              {finished === 0 ? (
+                <p className="py-20 text-center text-sm text-muted-foreground">
+                  No finished deliveries yet.
+                </p>
+              ) : (
+                <div className="flex min-h-56 items-center justify-center">
+                  <ProgressRing
+                    value={completionRate(
+                      data?.totalCompleted ?? 0,
+                      data?.totalFailed ?? 0,
+                      data?.totalReturned ?? 0,
+                    )}
+                    caption="of your finished deliveries were completed"
+                  />
+                </div>
+              )}
+            </ChartCard>
           </>
         )}
       </div>

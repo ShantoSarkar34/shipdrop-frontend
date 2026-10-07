@@ -8,29 +8,49 @@ import {
   Wallet,
 } from "lucide-react";
 import Link from "next/link";
+import { ChartCard } from "@/components/charts/chart-card";
+import { LazyAreaChart } from "@/components/charts/lazy-charts";
+import { ProgressRing } from "@/components/charts/progress-ring";
 import { AvailabilityCard } from "@/components/deliveries/availability-card";
 import { DeliveryCard } from "@/components/deliveries/delivery-card";
 import { FormError } from "@/components/forms/form-error";
 import { PageHeading } from "@/components/layout/page-heading";
+import { RevealGroup } from "@/components/marketing/reveal";
 import { EmptyState } from "@/components/shared/empty-state";
 import { StatCard } from "@/components/shared/stat-card";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PAYMENT_CURRENCY } from "@/config/currency";
-import { DEFAULT_PERIOD, PERIODS } from "@/config/periods";
+import { DEFAULT_PERIOD } from "@/config/periods";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { useDeliveries, useEarnings } from "@/hooks/use-deliveries";
-import { formatMoney } from "@/lib/format";
+import {
+  useAgentAnalytics,
+  useDeliveries,
+  useEarnings,
+} from "@/hooks/use-deliveries";
+import { completionRate } from "@/lib/chart-data";
+import { formatMoney, formatShortDate } from "@/lib/format";
+import { periodLabel } from "@/components/shared/period-control";
+
+const money = (value: number) => formatMoney(value, PAYMENT_CURRENCY);
 
 export function AgentDashboard() {
   const { data: user } = useCurrentUser();
   const earnings = useEarnings(DEFAULT_PERIOD);
+  const analytics = useAgentAnalytics(DEFAULT_PERIOD);
   const pending = useDeliveries({ status: "ASSIGNED", limit: 3 });
-  const periodLabel =
-    PERIODS.find((period) => period.value === DEFAULT_PERIOD)?.label ??
-    DEFAULT_PERIOD;
+  const label = periodLabel(DEFAULT_PERIOD).toLowerCase();
   const firstName = user?.name.split(" ")[0];
   const data = earnings.data;
+  const stats = analytics.data;
+
+  const earningsSeries = (data?.earningsTrend ?? []).map((point) => ({
+    label: formatShortDate(point.date),
+    value: point.amount,
+  }));
+  const finished = stats
+    ? stats.totalCompleted + stats.totalFailed + stats.totalReturned
+    : 0;
 
   return (
     <>
@@ -65,10 +85,7 @@ export function AgentDashboard() {
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1.3fr]">
         <AvailabilityCard />
-        <section
-          aria-label={`Performance, ${periodLabel.toLowerCase()}`}
-          className="grid gap-4 sm:grid-cols-2"
-        >
+        <RevealGroup stagger={0.08} className="grid gap-4 sm:grid-cols-2">
           <StatCard
             label="In progress"
             icon={Package}
@@ -76,28 +93,67 @@ export function AgentDashboard() {
             loading={earnings.isPending}
           />
           <StatCard
-            label={`Completed (${periodLabel.toLowerCase()})`}
+            label={`Completed (${label})`}
             icon={CheckCircle2}
             value={data?.completedDeliveries}
             loading={earnings.isPending}
           />
           <StatCard
-            label={`Failed (${periodLabel.toLowerCase()})`}
+            label={`Failed (${label})`}
             icon={TriangleAlert}
             value={data?.failedDeliveries}
             loading={earnings.isPending}
           />
           <StatCard
-            label={`Earnings (${periodLabel.toLowerCase()})`}
+            label={`Earnings (${label})`}
             icon={Wallet}
-            value={
-              data
-                ? formatMoney(data.totalEarnings, PAYMENT_CURRENCY)
-                : undefined
-            }
+            value={data?.totalEarnings}
+            format={money}
             loading={earnings.isPending}
           />
-        </section>
+        </RevealGroup>
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+        <ChartCard title="Earnings" description={periodLabel(DEFAULT_PERIOD)}>
+          {earnings.isPending ? (
+            <Skeleton className="h-64 w-full" />
+          ) : earningsSeries.length === 0 ? (
+            <p className="py-20 text-center text-sm text-muted-foreground">
+              Earnings appear once a delivery you completed has been paid.
+            </p>
+          ) : (
+            <LazyAreaChart
+              data={earningsSeries}
+              valueLabel="Earnings"
+              summary={`Area chart of daily earnings, ${label}`}
+              formatValue={money}
+            />
+          )}
+        </ChartCard>
+        <ChartCard
+          title="Completion rate"
+          description="Completed deliveries out of all finished ones."
+        >
+          {analytics.isPending ? (
+            <Skeleton className="h-64 w-full" />
+          ) : finished === 0 ? (
+            <p className="py-20 text-center text-sm text-muted-foreground">
+              No finished deliveries yet.
+            </p>
+          ) : (
+            <div className="flex min-h-56 items-center justify-center">
+              <ProgressRing
+                value={completionRate(
+                  stats?.totalCompleted ?? 0,
+                  stats?.totalFailed ?? 0,
+                  stats?.totalReturned ?? 0,
+                )}
+                caption="of your finished deliveries were completed"
+              />
+            </div>
+          )}
+        </ChartCard>
       </div>
 
       <section aria-labelledby="pending-heading" className="mt-10">
@@ -108,7 +164,7 @@ export function AgentDashboard() {
           <Skeleton className="h-56 w-full rounded-xl" />
         ) : pending.isError ? (
           <div className="space-y-3">
-            <FormError>{"We couldn't load your assignments."}</FormError>
+            <FormError>We couldn&apos;t load your assignments.</FormError>
             <Button
               variant="outline"
               size="sm"

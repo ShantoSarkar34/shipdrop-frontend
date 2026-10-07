@@ -3,52 +3,47 @@
 import { CheckCircle2, Package, Percent, Wallet } from "lucide-react";
 import { useState } from "react";
 import { ChartCard } from "@/components/charts/chart-card";
-import { LazyBarChart } from "@/components/charts/lazy-bar-chart";
+import {
+  LazyAreaChart,
+  LazyComposedChart,
+} from "@/components/charts/lazy-charts";
 import { FormError } from "@/components/forms/form-error";
-import { NativeSelect } from "@/components/forms/native-select";
+import { RevealGroup } from "@/components/marketing/reveal";
 import { EmptyState } from "@/components/shared/empty-state";
+import { PeriodControl, periodLabel } from "@/components/shared/period-control";
 import { StatCard } from "@/components/shared/stat-card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PAYMENT_CURRENCY } from "@/config/currency";
-import { DEFAULT_PERIOD, PERIODS } from "@/config/periods";
+import { DEFAULT_PERIOD } from "@/config/periods";
 import { useEarnings } from "@/hooks/use-deliveries";
 import { getErrorMessage } from "@/lib/api/errors";
+import { mergeDailySeries } from "@/lib/chart-data";
 import { formatMoney, formatPercent, formatShortDate } from "@/lib/format";
+
+const money = (value: number) => formatMoney(value, PAYMENT_CURRENCY);
 
 export function EarningsView() {
   const [period, setPeriod] = useState(DEFAULT_PERIOD);
   const earnings = useEarnings(period);
-  const periodLabel =
-    PERIODS.find((item) => item.value === period)?.label ?? period;
   const data = earnings.data;
+  const label = periodLabel(period).toLowerCase();
 
-  const trend = (data?.earningsTrend ?? []).map((point) => ({
+  const combo = data
+    ? mergeDailySeries(data.deliveryTrend, data.earningsTrend).map((point) => ({
+        label: formatShortDate(point.date),
+        bars: point.count,
+        line: point.amount,
+      }))
+    : [];
+  const earningsSeries = (data?.earningsTrend ?? []).map((point) => ({
     label: formatShortDate(point.date),
     value: point.amount,
   }));
 
   return (
     <>
-      {PERIODS.length > 1 ? (
-        <div className="mb-6 max-w-xs">
-          <NativeSelect
-            label="Period"
-            value={period}
-            onChange={(event) => setPeriod(event.target.value)}
-          >
-            {PERIODS.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </NativeSelect>
-        </div>
-      ) : (
-        <p className="mb-6 text-sm text-muted-foreground">
-          Showing: {periodLabel}
-        </p>
-      )}
+      <PeriodControl value={period} onChange={setPeriod} />
 
       {earnings.isError ? (
         <div className="mb-6 space-y-3">
@@ -63,16 +58,15 @@ export function EarningsView() {
         </div>
       ) : null}
 
-      <section
-        aria-label="Earnings summary"
+      <RevealGroup
+        stagger={0.08}
         className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
       >
         <StatCard
           label="Total earnings"
           icon={Wallet}
-          value={
-            data ? formatMoney(data.totalEarnings, PAYMENT_CURRENCY) : undefined
-          }
+          value={data?.totalEarnings}
+          format={money}
           loading={earnings.isPending}
         />
         <StatCard
@@ -93,7 +87,7 @@ export function EarningsView() {
           value={data ? formatPercent(data.commissionRate) : undefined}
           loading={earnings.isPending}
         />
-      </section>
+      </RevealGroup>
 
       <p className="mt-4 text-sm text-muted-foreground">
         Only delivered shipments that have been paid count toward your earnings.
@@ -101,24 +95,39 @@ export function EarningsView() {
         delivery charge.
       </p>
 
-      <div className="mt-8">
+      <div className="mt-8 space-y-6">
         {earnings.isPending ? (
           <Skeleton className="h-96 w-full rounded-xl" />
-        ) : trend.length === 0 && !earnings.isError ? (
+        ) : combo.length === 0 && !earnings.isError ? (
           <EmptyState
             icon={Wallet}
             title="No earnings in this period"
             description="Earnings appear here once a delivery you completed has been paid."
           />
-        ) : trend.length > 0 ? (
-          <ChartCard title="Earnings over time" description={periodLabel}>
-            <LazyBarChart
-              data={trend}
-              valueLabel="Earnings"
-              summary={`Bar chart of daily earnings, ${periodLabel.toLowerCase()}`}
-              formatValue={(value) => formatMoney(value, PAYMENT_CURRENCY)}
-            />
-          </ChartCard>
+        ) : combo.length > 0 ? (
+          <>
+            <ChartCard
+              title="Deliveries and earnings"
+              description={`Per day, ${label}`}
+            >
+              <LazyComposedChart
+                data={combo}
+                barLabel="Deliveries"
+                lineLabel="Earnings"
+                summary={`Chart of daily deliveries and earnings, ${label}`}
+                formatLine={money}
+              />
+            </ChartCard>
+            <ChartCard title="Earnings trend" description={periodLabel(period)}>
+              <LazyAreaChart
+                data={earningsSeries}
+                valueLabel="Earnings"
+                summary={`Area chart of daily earnings, ${label}`}
+                formatValue={money}
+                colorIndex={1}
+              />
+            </ChartCard>
+          </>
         ) : null}
       </div>
     </>
