@@ -3,7 +3,7 @@ export function formatAuditAction(action: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-export const shortId = (id: string) => id.slice(0, 8);
+export const shortId = (id: string) => id?.slice(0, 8);
 
 const MAX_VALUE_LENGTH = 80;
 

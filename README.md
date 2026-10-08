@@ -9,10 +9,6 @@ Every workflow talks to the real deployed API. There is no mock data for shipmen
 
 ## Screenshots
 
-> Screenshots live in `docs/screenshots/`. Add images with the file names below and they will appear here.
-
-### Public site
-
 | Home |
 | --- | 
 | ![Home page](./public/images/web-ss/hero.png) |
@@ -41,7 +37,7 @@ Every workflow talks to the real deployed API. There is no mock data for shipmen
 ### Dark mode
 
 | Dark mode | 
-| --- | --- |
+| --- |
 | ![Dashboard in dark mode](./public/images/web-ss/hero_dark.png) |
 
 ## Features
