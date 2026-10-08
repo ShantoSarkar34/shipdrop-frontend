@@ -7,75 +7,42 @@ The web application for **SwiftDrop**, a courier and logistics management platfo
 
 Every workflow talks to the real deployed API. There is no mock data for shipments, payments, earnings, analytics, users or audit logs.
 
-## Table of contents
-
-1. [Screenshots](#screenshots)
-2. [Features](#features)
-3. [Tech stack](#tech-stack)
-4. [Architecture](#architecture)
-5. [Route map](#route-map)
-6. [Design system and UX](#design-system-and-ux)
-7. [Getting started](#getting-started)
-8. [Demo accounts](#demo-accounts)
-9. [Testing](#testing)
-10. [Deployment](#deployment)
-11. [Stripe webhook troubleshooting](#stripe-webhook-troubleshooting)
-12. [Security notes](#security-notes)
-13. [Known limitations](#known-limitations)
-
 ## Screenshots
 
 > Screenshots live in `docs/screenshots/`. Add images with the file names below and they will appear here.
 
 ### Public site
 
-| Home | Login |
-| --- | --- |
-| ![Home page](docs/screenshots/home.png) | ![Login page with demo accounts](docs/screenshots/login.png) |
+| Home |
+| --- | 
+| ![Home page](./public/images/web-ss/hero.png) |
 
-| About | Pricing |
-| --- | --- |
-| ![About page](docs/screenshots/about.png) | ![Pricing page](docs/screenshots/pricing.png) |
 
 ### Customer
 
-| Dashboard | Create shipment |
-| --- | --- |
-| ![Customer dashboard with charts](docs/screenshots/customer-dashboard.png) | ![Create shipment wizard](docs/screenshots/create-shipment.png) |
+| Dashboard |
+| --- |
+| ![Customer dashboard with charts](./public/images/web-ss/customer_dashboard.png) |
 
-| Shipment details and timeline | Payment confirmed |
-| --- | --- |
-| ![Shipment detail with status timeline](docs/screenshots/shipment-detail.png) | ![Payment confirmed page](docs/screenshots/payment-success.png) |
 
 ### Delivery agent
 
-| Dashboard | Deliveries |
-| --- | --- |
-| ![Agent dashboard](docs/screenshots/agent-dashboard.png) | ![Agent deliveries list](docs/screenshots/agent-deliveries.png) |
-
-| Earnings | Analytics |
-| --- | --- |
-| ![Agent earnings](docs/screenshots/agent-earnings.png) | ![Agent analytics](docs/screenshots/agent-analytics.png) |
+| Dashboard |
+| --- |
+| ![Agent dashboard](./public/images/web-ss/delivery_agent-dashboard.png) |
 
 ### Administrator
 
-| Dashboard | Analytics |
-| --- | --- |
-| ![Admin dashboard](docs/screenshots/admin-dashboard.png) | ![Admin analytics](docs/screenshots/admin-analytics.png) |
+| Dashboard |
+| --- |
+| ![Admin dashboard](./public/images/web-ss/admin_dashboard.png) |
 
-| Assign an agent | Users |
-| --- | --- |
-| ![Assign an agent to a shipment](docs/screenshots/admin-assign-agent.png) | ![User management](docs/screenshots/admin-users.png) |
 
-| Agents roster | Audit logs |
-| --- | --- |
-| ![Delivery agents roster](docs/screenshots/admin-agents.png) | ![Audit logs](docs/screenshots/admin-audit-logs.png) |
+### Dark mode
 
-### Dark mode and mobile
-
-| Dark mode | Mobile |
+| Dark mode | 
 | --- | --- |
-| ![Dashboard in dark mode](docs/screenshots/dark-mode.png) | ![Mobile layout](docs/screenshots/mobile.png) |
+| ![Dashboard in dark mode](./public/images/web-ss/hero_dark.png) |
 
 ## Features
 
